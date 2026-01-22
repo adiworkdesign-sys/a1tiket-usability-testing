@@ -30,40 +30,57 @@ export function parseKTPText(ocrText: string): Partial<KTPData> {
         }
     }
 
-    // Find Name (usually after "Nama" label or as second/third line)
-    const namePatterns = [
-        /(?:Nama|NAMA|Name)\s*:?\s*(.+)/i,
-        /^([A-Z\s]{3,50})$/  // All caps name, 3-50 chars
-    ];
+    // Find Name - Indonesian KTP layout:
+    // Line 1: PROVINSI ...
+    // Line 2: KABUPATEN/KOTA ...
+    // Line 3: NIK : xxxxxxxxxxxxxxxx
+    // Line 4: Nama : ACTUAL NAME HERE
+
+    // Strategy 1: Look for "Nama" label (most reliable)
+    const namaLabelPattern = /(?:Nama|NAMA|Name)\s*[:.]?\s*(.+)/i;
 
     for (const line of lines) {
-        for (const pattern of namePatterns) {
-            const nameMatch = line.match(pattern);
-            if (nameMatch && nameMatch[1]) {
-                const name = nameMatch[1].trim();
-                // Validate: Name should be mostly letters
-                if (name.length >= 3 && /^[A-Z\s\.]{3,}$/.test(name)) {
-                    result.fullName = name;
-                    break;
-                }
+        const namaMatch = line.match(namaLabelPattern);
+        if (namaMatch && namaMatch[1]) {
+            const name = namaMatch[1].trim();
+
+            // Filter out obvious non-names
+            const excludeWords = /^(PROVINSI|KABUPATEN|KOTA|NIK|TEMPAT|LAHIR|JENIS|KELAMIN|ALAMAT|AGAMA|STATUS|PEKERJAAN|KEWARGANEGARAAN|BERLAKU|WNI|SEUMUR|HIDUP)/i;
+
+            if (!excludeWords.test(name) && name.length >= 3 && name.length <= 50) {
+                // Valid name found
+                result.fullName = name.toUpperCase();
+                break;
             }
         }
-        if (result.fullName) break;
     }
 
-    // Fallback: If no name found with label, try to find the longest all-caps line
-    if (!result.fullName) {
-        let longestCapsLine = '';
+    // Strategy 2: If no "Nama:" label found, look for line after NIK
+    if (!result.fullName && result.identityNumber) {
+        let foundNIK = false;
         for (const line of lines) {
-            if (/^[A-Z\s\.]{5,50}$/.test(line) && line.length > longestCapsLine.length) {
-                // Skip if it's likely a province/city name (common words)
-                if (!/(PROVINSI|KABUPATEN|KOTA|JAKARTA|JAWA|SUMATERA)/i.test(line)) {
-                    longestCapsLine = line;
+            // Skip until we find the NIK line
+            if (line.includes(result.identityNumber)) {
+                foundNIK = true;
+                continue;
+            }
+
+            // Next line after NIK might be name
+            if (foundNIK) {
+                // Check if line looks like a name (all caps, no special chars)
+                const cleanLine = line.replace(/^(Nama|NAMA|Name)\s*[:.]?\s*/i, '').trim();
+
+                // Must be all caps letters/spaces, 3-50 chars
+                if (/^[A-Z\s.]{3,50}$/.test(cleanLine)) {
+                    // Exclude common location words
+                    const excludePattern = /(PROVINSI|KABUPATEN|KOTA|JAKARTA|JAWA BARAT|JAWA TENGAH|JAWA TIMUR|SUMATERA|KALIMANTAN|SULAWESI|PAPUA|BALI|PURWAKARTA|BANDUNG|SURABAYA)/i;
+
+                    if (!excludePattern.test(cleanLine)) {
+                        result.fullName = cleanLine;
+                        break;
+                    }
                 }
             }
-        }
-        if (longestCapsLine) {
-            result.fullName = longestCapsLine;
         }
     }
 
