@@ -27,14 +27,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(mockUser); // Auto login untuk demo
     const [isAuthenticated, setIsAuthenticated] = useState(true);
 
-    const login = async (email: string, password: string) => {
+    const login = async (_email: string, _password: string) => {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         setUser(mockUser);
         setIsAuthenticated(true);
     };
 
-    const register = async (name: string, email: string, password: string) => {
+    const register = async (name: string, email: string, _password: string) => {
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         const newUser: User = {

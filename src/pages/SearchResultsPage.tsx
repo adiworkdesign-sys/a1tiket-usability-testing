@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { trains } from '@/data/trains';
 import { Schedule } from '@/types';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { ArrowRight, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function SearchResultsPage() {

@@ -59,7 +59,6 @@ export default function TicketTierPage() {
                     <div className="space-y-3">
                         {ticketTiers.map((tier, idx) => {
                             const isSelected = selected === tier.id;
-                            const totalPrice = basePrice + (tier.price * passengers);
 
                             return (
                                 <motion.div
@@ -70,8 +69,8 @@ export default function TicketTierPage() {
                                 >
                                     <Card
                                         className={`relative overflow-hidden cursor-pointer transition-all ${isSelected
-                                                ? 'border-primary border-2 shadow-lg'
-                                                : 'border-border hover:border-primary/50'
+                                            ? 'border-primary border-2 shadow-lg'
+                                            : 'border-border hover:border-primary/50'
                                             }`}
                                         onClick={() => setSelected(tier.id)}
                                     >

@@ -8,7 +8,7 @@ import { useBooking } from '@/contexts/BookingContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { paymentMethods } from '@/data/constants';
 import { ArrowLeft, Tag, Wallet, CreditCard, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+
 import { formatCurrency, delay, generateBookingCode } from '@/lib/utils';
 
 export default function PaymentPage() {
@@ -16,7 +16,6 @@ export default function PaymentPage() {
     const { user } = useAuth();
     const {
         selectedSchedule,
-        selectedSeats,
         selectedTier,
         passengers,
         selectedPayment,
@@ -167,8 +166,8 @@ export default function PaymentPage() {
                                             key={method.id}
                                             onClick={() => setSelectedPayment(method)}
                                             className={`w-full p-3 rounded-lg border-2 flex items-center justify-between transition ${selectedPayment?.id === method.id
-                                                    ? 'border-primary bg-primary/5'
-                                                    : 'border-border hover:border-primary/50'
+                                                ? 'border-primary bg-primary/5'
+                                                : 'border-border hover:border-primary/50'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
@@ -191,8 +190,8 @@ export default function PaymentPage() {
                                             key={method.id}
                                             onClick={() => setSelectedPayment(method)}
                                             className={`w-full p-3 rounded-lg border-2 flex items-center justify-between transition ${selectedPayment?.id === method.id
-                                                    ? 'border-primary bg-primary/5'
-                                                    : 'border-border hover:border-primary/50'
+                                                ? 'border-primary bg-primary/5'
+                                                : 'border-border hover:border-primary/50'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">

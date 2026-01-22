@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Station, Schedule, Seat, Passenger, TicketTier, PaymentMethod } from '@/types';
-import { ticketTiers, paymentMethods } from '@/data/constants';
+import { ticketTiers } from '@/data/constants';
 
 interface BookingContextType {
     // Search params

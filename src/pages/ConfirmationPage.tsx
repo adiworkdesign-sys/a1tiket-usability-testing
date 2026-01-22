@@ -4,9 +4,9 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useBooking } from '@/contexts/BookingContext';
-import { CheckCircle, Download, Home, Ticket } from 'lucide-react';
+import { CheckCircle, Home, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import Confetti from 'react-confetti';
 
 export default function ConfirmationPage() {

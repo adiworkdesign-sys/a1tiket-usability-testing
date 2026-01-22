@@ -3,7 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Ticket, Clock, CheckCircle, XCircle, QrCode } from 'lucide-react';
+import { Ticket, Clock, CheckCircle, QrCode } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
