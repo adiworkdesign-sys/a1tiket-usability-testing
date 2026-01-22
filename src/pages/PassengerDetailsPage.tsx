@@ -8,7 +8,8 @@ import { Card } from '@/components/ui/card';
 import { useBooking } from '@/contexts/BookingContext';
 import { Passenger } from '@/types';
 import { ArrowLeft, Camera, User, CreditCard, Mail, Phone } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { KTPScanner } from '@/components/KTPScanner';
+import type { KTPData } from '@/lib/ktpParser';
 
 export default function PassengerDetailsPage() {
     const navigate = useNavigate();
@@ -73,17 +74,15 @@ export default function PassengerDetailsPage() {
         }
     };
 
-    const handleKTPScan = () => {
-        // Simulate KTP scan
-        setTimeout(() => {
-            setFormData({
-                ...formData,
-                fullName: 'BUDI SANTOSO',
-                identityNumber: '3201234567890123',
-                phone: '+6281234567890',
-            });
-            setShowKTPScanner(false);
-        }, 1500);
+    const handleKTPScanComplete = (data: Partial<KTPData>) => {
+        // Fill form with scanned data
+        setFormData({
+            ...formData,
+            fullName: data.fullName || formData.fullName || '',
+            identityNumber: data.identityNumber || formData.identityNumber || '',
+            phone: data.phone || formData.phone || '',
+        });
+        setShowKTPScanner(false);
     };
 
     return (
@@ -148,8 +147,8 @@ export default function PassengerDetailsPage() {
                                         key={title}
                                         onClick={() => handleInputChange('title', title)}
                                         className={`flex-1 py-2 px-4 rounded-lg border-2 font-medium transition ${formData.title === title
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-border hover:border-primary/50'
+                                            ? 'border-primary bg-primary/10'
+                                            : 'border-border hover:border-primary/50'
                                             }`}
                                     >
                                         {title}
@@ -182,8 +181,8 @@ export default function PassengerDetailsPage() {
                                         key={type}
                                         onClick={() => handleInputChange('identityType', type)}
                                         className={`flex-1 py-2 px-4 rounded-lg border-2 font-medium transition ${formData.identityType === type
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-border hover:border-primary/50'
+                                            ? 'border-primary bg-primary/10'
+                                            : 'border-border hover:border-primary/50'
                                             }`}
                                     >
                                         {type}
@@ -248,40 +247,10 @@ export default function PassengerDetailsPage() {
 
                 {/* KTP Scanner Modal */}
                 {showKTPScanner && (
-                    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="bg-background rounded-2xl p-6 max-w-sm w-full"
-                        >
-                            <div className="text-center space-y-4">
-                                <div className="w-16 h-16 mx-auto bg-primary/20 rounded-full flex items-center justify-center">
-                                    <Camera className="w-8 h-8 text-primary" />
-                                </div>
-                                <h3 className="font-bold text-xl">Scan KTP</h3>
-                                <p className="text-muted-foreground">
-                                    Posisikan KTP Anda dalam frame kamera
-                                </p>
-                                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                                    <div className="border-4 border-dashed border-primary w-3/4 h-3/4 rounded-lg flex items-center justify-center">
-                                        <CreditCard className="w-12 h-12 text-muted-foreground" />
-                                    </div>
-                                </div>
-                                <div className="flex gap-2">
-                                    <Button
-                                        onClick={() => setShowKTPScanner(false)}
-                                        variant="outline"
-                                        className="flex-1"
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button onClick={handleKTPScan} className="flex-1">
-                                        Ambil Foto
-                                    </Button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
+                    <KTPScanner
+                        onScanComplete={handleKTPScanComplete}
+                        onClose={() => setShowKTPScanner(false)}
+                    />
                 )}
             </div>
         </AppLayout>
