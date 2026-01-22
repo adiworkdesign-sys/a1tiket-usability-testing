@@ -136,7 +136,7 @@ export function KTPScanner({ onScanComplete, onClose }: KTPScannerProps) {
             </div>
 
             {/* Camera Preview */}
-            <div className="flex-1 relative flex items-center justify-center bg-black">
+            <div className="flex-1 relative flex items-center justify-center bg-black overflow-hidden" style={{ minHeight: 'calc(100vh - 180px)' }}>
                 <Webcam
                     ref={webcamRef}
                     audio={false}
@@ -147,7 +147,7 @@ export function KTPScanner({ onScanComplete, onClose }: KTPScannerProps) {
                         height: 720
                     }}
                     onUserMediaError={handleUserMediaError}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                 />
 
                 {/* Overlay Frame Guide */}
@@ -242,40 +242,42 @@ export function KTPScanner({ onScanComplete, onClose }: KTPScannerProps) {
                 </AnimatePresence>
             </div>
 
-            {/* Bottom Actions */}
-            <div className="bg-background/95 backdrop-blur p-4">
-                <div className="max-w-md mx-auto flex gap-3">
-                    <Button
-                        onClick={onClose}
-                        variant="outline"
-                        className="flex-1"
-                        disabled={status === 'processing'}
-                    >
-                        Batal
-                    </Button>
-                    <Button
-                        onClick={handleCapture}
-                        className="flex-1"
-                        disabled={status === 'processing' || status === 'success'}
-                    >
-                        {status === 'processing' ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Memproses...
-                            </>
-                        ) : (
-                            <>
-                                <Camera className="w-4 h-4 mr-2" />
-                                Ambil Foto
-                            </>
-                        )}
-                    </Button>
-                </div>
+            {/* Bottom Actions - Fixed for Mobile */}
+            <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur border-t z-50" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+                <div className="p-4">
+                    <div className="max-w-md mx-auto flex gap-3">
+                        <Button
+                            onClick={onClose}
+                            variant="outline"
+                            className="flex-1"
+                            disabled={status === 'processing'}
+                        >
+                            Batal
+                        </Button>
+                        <Button
+                            onClick={handleCapture}
+                            className="flex-1"
+                            disabled={status === 'processing' || status === 'success'}
+                        >
+                            {status === 'processing' ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Memproses...
+                                </>
+                            ) : (
+                                <>
+                                    <Camera className="w-4 h-4 mr-2" />
+                                    Ambil Foto
+                                </>
+                            )}
+                        </Button>
+                    </div>
 
-                {/* Helper Text */}
-                <p className="text-xs text-center text-muted-foreground mt-3">
-                    💡 Tips: Pastikan pencahayaan cukup dan KTP terlihat jelas
-                </p>
+                    {/* Helper Text */}
+                    <p className="text-xs text-center text-muted-foreground mt-3">
+                        💡 Tips: Pastikan pencahayaan cukup dan KTP terlihat jelas
+                    </p>
+                </div>
             </div>
         </div>
     );
